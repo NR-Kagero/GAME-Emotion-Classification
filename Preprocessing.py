@@ -150,3 +150,4 @@ def k_fold_results_plots(results):
         mlflow.log_figure(current_figure, "plots/" + metric + ".png")
     return values
 
+# mlflow ui

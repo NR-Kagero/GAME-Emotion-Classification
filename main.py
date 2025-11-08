@@ -1,9 +1,3 @@
-import os
-import numpy as np
-import xgboost as xgb
-from Preprocessing import *
-from sklearn.metrics import f1_score, recall_score, precision_score, accuracy_score, balanced_accuracy_score
-
 from Preprocessing import *
 
 # path = "C:\\Users\\Kagero\\PycharmProjects\\GAME-Emotion-Classification\\GAMEEMO"
@@ -16,31 +10,32 @@ from Preprocessing import *
 # for i in results:
 #     print(i)
 #     print(results[i])
-results = {1: {'Metric accuracy_score result ': 0.8769463667820069,
-               'Metric balanced_accuracy_score result ': 0.8784757505179996,
-               'Metric f1_score result ': 0.8824439576964764, 'Metric recall_score result ': 0.8784757505179996,
-               'Metric precision_score result ': 0.9116402363534912},
-           2: {'Metric accuracy_score result ': 0.8769463667820069,
-               'Metric balanced_accuracy_score result ': 0.875983515506874,
-               'Metric f1_score result ': 0.8833592585102107, 'Metric recall_score result ': 0.875983515506874,
-               'Metric precision_score result ': 0.9160304279271008},
-           3: {'Metric accuracy_score result ': 0.8752162629757786,
-               'Metric balanced_accuracy_score result ': 0.8740834140368053,
-               'Metric f1_score result ': 0.8816258984925424, 'Metric recall_score result ': 0.8740834140368053,
-               'Metric precision_score result ': 0.9134748063049233},
-           4: {'Metric accuracy_score result ': 0.8685121107266436,
-               'Metric balanced_accuracy_score result ': 0.8693035321970856,
-               'Metric f1_score result ': 0.8748489439446425, 'Metric recall_score result ': 0.8693035321970856,
-               'Metric precision_score result ': 0.90858541870837},
-           5: {'Metric accuracy_score result ': 0.8799740484429066,
-               'Metric balanced_accuracy_score result ': 0.879912000551943, 'Metric f1_score result ': 0.88571731874731,
-               'Metric recall_score result ': 0.879912000551943, 'Metric precision_score result ': 0.9154495946159488},
-           6: {'Metric accuracy_score result ': 0.8650519031141869,
-               'Metric balanced_accuracy_score result ': 0.8664162071714636,
-               'Metric f1_score result ': 0.8711523127857014, 'Metric recall_score result ': 0.8664162071714636,
-               'Metric precision_score result ': 0.9053065846126636},
-           7: {'Metric accuracy_score result ': 0.8760813148788927,
-               'Metric balanced_accuracy_score result ': 0.8747837861709604,
-               'Metric f1_score result ': 0.8821183693498913, 'Metric recall_score result ': 0.8747837861709604,
-               'Metric precision_score result ': 0.9143479623144102}}
-k_fold_results_plots(results=results)
+results = {1: {'Metric accuracy_score result ': 0.9467429577464789,
+               'Metric balanced_accuracy_score result ': 0.9466568636186341,
+               'Metric f1_score result ': 0.9479058151176654, 'Metric recall_score result ': 0.9466568636186341,
+               'Metric precision_score result ': 0.9546717727834749},
+           2: {'Metric accuracy_score result ': 0.9445422535211268,
+               'Metric balanced_accuracy_score result ': 0.944666784292768,
+               'Metric f1_score result ': 0.9458622534291516, 'Metric recall_score result ': 0.944666784292768,
+               'Metric precision_score result ': 0.9534290070069261},
+           3: {'Metric accuracy_score result ': 0.9476232394366197,
+               'Metric balanced_accuracy_score result ': 0.9480690085291266,
+               'Metric f1_score result ': 0.9487258745376468, 'Metric recall_score result ': 0.9480690085291266,
+               'Metric precision_score result ': 0.9551549072495709},
+           4: {'Metric accuracy_score result ': 0.9496038732394366,
+               'Metric balanced_accuracy_score result ': 0.9496742116800192,
+               'Metric f1_score result ': 0.9509438113216173, 'Metric recall_score result ': 0.9496742116800192,
+               'Metric precision_score result ': 0.9572122882956067},
+           5: {'Metric accuracy_score result ': 0.9496038732394366,
+               'Metric balanced_accuracy_score result ': 0.9491958334859812,
+               'Metric f1_score result ': 0.9511283706159827, 'Metric recall_score result ': 0.9491958334859812,
+               'Metric precision_score result ': 0.9578789467138233},
+           6: {'Metric accuracy_score result ': 0.9443221830985915,
+               'Metric balanced_accuracy_score result ': 0.9440974427720261,
+               'Metric f1_score result ': 0.9459844864833863, 'Metric recall_score result ': 0.9440974427720261,
+               'Metric precision_score result ': 0.9537591117982631},
+           7: {'Metric accuracy_score result ': 0.9491637323943662,
+               'Metric balanced_accuracy_score result ': 0.9492076093350433,
+               'Metric f1_score result ': 0.9504387464622264, 'Metric recall_score result ': 0.9492076093350433,
+               'Metric precision_score result ': 0.9568871655035718}}
+k_fold_results_plots(results=results, "Plots/", "15s_14.5overlap")

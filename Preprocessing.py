@@ -145,9 +145,8 @@ def k_fold_results_plots(results, path, name_adds):
         plt.ylabel("Result")
         plt.xlabel("Fold")
         plt.title(metric + "plot")
-        plt.show()
         plt.savefig(path + metric + name_adds + '.png')
-        current_figure = plt.gcf()
+        plt.show()
         #mlflow.log_figure(current_figure, "plots/" + metric + ".png")
     return values
 

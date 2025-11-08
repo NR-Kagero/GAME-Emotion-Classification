@@ -39,7 +39,7 @@ def read_all_files_paths(path, allFiles):
 
 
 def file_reading_preprocessing_reshaping_with_overlap(path, length, overlap):
-    overlap_step = int(length - overlap) - 1
+    overlap_step = length - overlap
     data = pd.read_csv(path)
     data = np.array(data)
     data = data[:, 0:14]
@@ -47,7 +47,7 @@ def file_reading_preprocessing_reshaping_with_overlap(path, length, overlap):
     samples = []
     for i in range((data.shape[0] // sampling_rate) - length + 1):
         samples.append(
-            fft_power_freqs(data[(i + overlap_step) * sampling_rate:(i + length) * sampling_rate, :], 1.6, -1, False))
+            fft_power_freqs(data[int((i + overlap_step) * sampling_rate):int((i + length) * sampling_rate), :], 1.6, -1, False))
     X = np.array(samples)
     Y = np.zeros((X.shape[0], 4))
     Y[np.arange(X.shape[0],dtype=np.int16), np.zeros(X.shape[0],dtype=np.int16)+ (int(path[103]) - 1)] = 1
@@ -91,30 +91,30 @@ def k_fold_test(K=5, X=None, Y=None, model=None, metrics=None):
     fold_size = X.shape[0] // K
     ides = np.arange(X.shape[0],dtype=np.int64)
     np.random.shuffle(ides)
+    mlflow.log_param("K_folds", K)
+    mlflow.log_param("model_type", model.__class__.__name__)
     for i in range(K):
         fold = {}
-        mlflow.log_param("Fold number", i + 1)
-        test_ides = ides[i * fold_size:(i + 1) * fold_size]
-        train_ides = np.concatenate( (ides[:i * fold_size], ides[(i + 1) * fold_size:]) )
-        x_train, y_train = X[train_ides], Y[train_ides]
-        x_test, y_test = X[test_ides], Y[test_ides]
-        model.fit(x_train, y_train)
-        y_prediction = model.predict(x_test)
-        y_prediction = np.argmax(y_prediction, axis=1)
-        y_test = np.argmax(y_test, axis=1)
-        print(y_prediction)
-        print(y_test)
-        if type(metrics) == list:
-            for metric in metrics:
-                metric_name = metric.__name__
-                if metric_name in ['f1_score', 'recall_score', 'precision_score']:
-                    metric_result = metric(y_test, y_prediction, average='macro')
-                else:
-                    metric_result = metric(y_test, y_prediction)
-                print(f"{metric_name}: {metric_result}")
-                fold["Metric " + metric_name + " result "] = metric_result
-                mlflow.log_param("Metric " + metric_name + " result ", metric_result)
-        folds_results[i + 1] = fold
+        with mlflow.start_run(run_name=f"Fold {i + 1}", nested=True) as child_run:
+            mlflow.log_param("Fold number", i + 1)
+            test_ides = ides[i * fold_size:(i + 1) * fold_size]
+            train_ides = np.concatenate( (ides[:i * fold_size], ides[(i + 1) * fold_size:]) )
+            x_train, y_train = X[train_ides], Y[train_ides]
+            x_test, y_test = X[test_ides], Y[test_ides]
+            model.fit(x_train, y_train)
+            y_prediction = model.predict(x_test)
+            y_prediction = np.argmax(y_prediction, axis=1)
+            y_test = np.argmax(y_test, axis=1)
+            if type(metrics) == list:
+                for metric in metrics:
+                    metric_name = metric.__name__
+                    if metric_name in ['f1_score', 'recall_score', 'precision_score']:
+                        metric_result = metric(y_test, y_prediction, average='macro')
+                    else:
+                        metric_result = metric(y_test, y_prediction)
+                    fold["Metric " + metric_name + " result "] = metric_result
+                    mlflow.log_param("Metric " + metric_name + " result ", metric_result)
+            folds_results[i + 1] = fold
     return folds_results
 
 
@@ -135,19 +135,20 @@ def data_preparing_preprocessing_reshaping_with_overlap(path, length, overlap):
 def k_fold_results_plots(results):
     folds = results.keys()
     values = list()
-    metrics = list(folds[0].keys())
+    metrics = list(results[1].keys())
     for fold in folds:
         values.append(list(results[fold].values()))
     values = np.array(values)
     for metric in metrics:
-        plt.plot(np.arange(len(folds)) + 1, values[:, metric.index(metric)], label=metric)
+        plt.plot(np.arange(len(folds)) + 1, values[:, metrics.index(metric)], label=metric)
         plt.ylabel("Result")
         plt.xlabel("Fold")
         plt.title(metric + " plot")
         plt.text(10, 10, f"Max = {max(values[:, metric.index(metric)])}")
         plt.show()
         current_figure = plt.gcf()
-        mlflow.log_figure(current_figure, "plots/" + metric + ".png")
+        #mlflow.log_figure(current_figure, "plots/" + metric + ".png")
     return values
 
-# mlflow ui
+# mlflow ui to run
+# ctrl+c to close

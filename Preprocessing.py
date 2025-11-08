@@ -1,8 +1,9 @@
 import os
-import numpy as np
-import pandas as pd
+
 import matplotlib.pyplot as plt
 import mlflow
+import numpy as np
+import pandas as pd
 
 sampling_rate = 128
 
@@ -132,7 +133,7 @@ def data_preparing_preprocessing_reshaping_with_overlap(path, length, overlap):
     return X, Y
 
 
-def k_fold_results_plots(results):
+def k_fold_results_plots(results, path, name_adds):
     folds = results.keys()
     values = list()
     metrics = list(results[1].keys())
@@ -143,9 +144,9 @@ def k_fold_results_plots(results):
         plt.plot(np.arange(len(folds)) + 1, values[:, metrics.index(metric)], label=metric)
         plt.ylabel("Result")
         plt.xlabel("Fold")
-        plt.title(metric + " plot")
-        plt.text(10, 10, f"Max = {max(values[:, metric.index(metric)])}")
+        plt.title(metric + "plot")
         plt.show()
+        plt.savefig(path + metric + name_adds + '.png')
         current_figure = plt.gcf()
         #mlflow.log_figure(current_figure, "plots/" + metric + ".png")
     return values
